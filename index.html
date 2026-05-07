@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia de Amor 💖</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #0b0b1a, #000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+/* 🎬 INTRO */
+.intro{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:999;
+    animation: fadeIntro 4s forwards;
+}
+
+.intro h1{
+    font-size:40px;
+    letter-spacing:5px;
+}
+
+.intro p{
+    margin-top:10px;
+    opacity:0.7;
+}
+
+@keyframes fadeIntro{
+    0%{opacity:1;}
+    80%{opacity:1;}
+    100%{opacity:0; visibility:hidden;}
+}
+
+/* 💌 CARTA */
+.envelope{
+    width:90vw;
+    max-width:420px;
+    height:280px;
+    background: rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(20px);
+    border-radius:25px;
+    box-shadow:0 30px 100px rgba(0,0,0,0.8);
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:0.5s;
+}
+
+.envelope:hover{
+    transform: scale(1.03);
+}
+
+/* 💌 SOLAPA */
+.flap{
+    position:absolute;
+    top:0;
+    width:0;
+    height:0;
+    border-left:210px solid transparent;
+    border-right:210px solid transparent;
+    border-top:140px solid #ff4d6d;
+    transform-origin:top;
+    transition:1s ease;
+}
+
+.open .flap{
+    transform: rotateX(180deg);
+}
+
+/* 📜 CARTA */
+.letter{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:0;
+    background:white;
+    color:#222;
+    padding:20px;
+    overflow:hidden;
+    border-radius:20px;
+    transition:1.2s ease;
+}
+
+.open .letter{
+    height:270px;
+}
+
+/* ✍️ TEXTO */
+.text{
+    font-size:13px;
+    line-height:1.6;
+    white-space:pre-wrap;
+}
+
+/* ❤️ CORAZÓN FINAL */
+.bigHeart{
+    font-size:120px;
+    color:red;
+    text-align:center;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+}
+
+/* 🌙 BOKEH */
+.bokeh{
+    position:absolute;
+    bottom:-20px;
+    color:rgba(255,255,255,0.4);
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(0); opacity:1;}
+    100%{transform:translateY(-120vh); opacity:0;}
+}
+
+/* 🎵 BOTON */
+.btn{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.2);
+    padding:10px 18px;
+    border-radius:25px;
+    color:white;
+    cursor:pointer;
+    backdrop-filter: blur(10px);
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎬 INTRO -->
+<div class="intro">
+    <h1>Historia De Amor</h1>
+    <p>Netflix Presenta 💖</p>
+</div>
+
+<!-- 🎵 MUSICA -->
+<audio id="musica" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<button class="btn" onclick="toggleMusic()">🎵 Música</button>
+
+<!-- 💌 CARTA -->
+<div class="envelope" id="carta" onclick="nextScene()">
+    <div class="flap"></div>
+    <div class="letter">
+        <p class="text" id="mensaje"></p>
+    </div>
+</div>
+
+<script>
+
+let musica = document.getElementById("musica");
+let playing = false;
+
+function toggleMusic(){
+    if(!playing){
+        musica.play();
+        playing = true;
+    }else{
+        musica.pause();
+        playing = false;
+    }
+}
+
+/* 🎬 ESCENAS */
+const escenas = [
+`🎬 Escena 1...
+
+En un mundo donde millones de personas se cruzan sin encontrarse,
+tú y yo logramos coincidir.`,
+
+`🎬 Escena 2...
+
+Y desde ese instante… todo cambió.
+
+Sin darnos cuenta, empezaste a convertirte en mi lugar seguro,
+en esa calma que no sabía que necesitaba.`,
+
+`🎬 Escena 3...
+
+No fue planeado…
+No fue buscado…
+
+pero contigo entendí que algunas personas llegan
+para quedarse en el alma.
+
+Gracias por existir. Fin...`
+];
+
+let escena = 0;
+let i = 0;
+let escribiendo = false; // 🔒 BLOQUEO
+
+function nextScene(){
+
+    if(escribiendo) return; // 🚫 bloquea clic mientras escribe
+
+    const carta = document.getElementById("carta");
+    const el = document.getElementById("mensaje");
+
+    carta.classList.add("open");
+
+    // ❤️ FINAL
+    if(escena >= escenas.length){
+        el.innerHTML = `<div class="bigHeart">❤️</div>`;
+        return;
+    }
+
+    let texto = escenas[escena];
+    el.innerHTML = "";
+
+    escribiendo = true;
+
+    function escribir(){
+        if(i < texto.length){
+            el.innerHTML += texto.charAt(i);
+            i++;
+            setTimeout(escribir, 35);
+        }else{
+            escena++;
+            i = 0;
+            escribiendo = false; // 🔓 desbloquea al terminar
+        }
+    }
+
+    escribir();
+}
+
+/* 🌙 BOKEH */
+function bokeh(){
+    const b = document.createElement("div");
+    b.classList.add("bokeh");
+    b.innerHTML = "❤";
+
+    b.style.left = Math.random()*100 + "vw";
+    b.style.fontSize = (8 + Math.random()*25) + "px";
+    b.style.animationDuration = (3 + Math.random()*6) + "s";
+
+    document.body.appendChild(b);
+
+    setTimeout(()=>b.remove(),9000);
+}
+
+setInterval(bokeh,180);
+
+</script>
+
+</body>
+</html>
